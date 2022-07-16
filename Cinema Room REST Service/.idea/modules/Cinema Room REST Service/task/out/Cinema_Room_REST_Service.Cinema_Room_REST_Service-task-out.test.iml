@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":util:main" external.linked.project.path="$MODULE_DIR$/../../../util" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="Cinema Room REST Service" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_16">
-    <output url="file://$MODULE_DIR$/../../../util/out/production/classes" />
+<module external.linked.project.id=":Cinema_Room_REST_Service-task-out:test" external.linked.project.path="$MODULE_DIR$/../../../../../Cinema Room REST Service/task/out" external.root.project.path="$MODULE_DIR$/../../../../.." external.system.id="GRADLE" external.system.module.group="Cinema Room REST Service" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output-test url="file://$MODULE_DIR$/../../../../../Cinema Room REST Service/task/out/out/test/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../util/src" />
+    <content url="file://$MODULE_DIR$/../../../../../Cinema Room REST Service/task/out/src/test" />
+    <content url="file://$MODULE_DIR$/../../../../../Cinema Room REST Service/task/out/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../../../Cinema Room REST Service/task/out/test" isTestSource="true" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Cinema_Room_REST_Service.Cinema_Room_REST_Service-task-out.main" />
+    <orderEntry type="module" module-name="Cinema_Room_REST_Service.util.main" />
+    <orderEntry type="module" module-name="Cinema_Room_REST_Service.util.test" production-on-test="" />
     <orderEntry type="library" name="Gradle: com.github.hyperskill:hs-test:release-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: org.assertj:assertj-swing-junit:3.9.2" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
@@ -20,4 +26,5 @@
     <orderEntry type="library" name="Gradle: org.assertj:assertj-core:3.11.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.easytesting:fest-util:1.2.5" level="project" />
   </component>
+  <component name="TestModuleProperties" production-module="Cinema_Room_REST_Service.Cinema_Room_REST_Service-task-out.main" />
 </module>

@@ -4,13 +4,14 @@
     <facet type="web" name="Web">
       <configuration>
         <webroots />
+        <sourceRoots />
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_16">
     <output url="file://$MODULE_DIR$/../../../../Cinema Room REST Service/task/out/production/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../Cinema Room REST Service/task/src">
