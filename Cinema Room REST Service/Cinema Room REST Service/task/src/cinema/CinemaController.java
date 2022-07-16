@@ -2,11 +2,10 @@ package cinema;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
 
 @RestController
 public class CinemaController {
@@ -18,15 +17,20 @@ public class CinemaController {
     }
 
     @PostMapping("/purchase")
-    public ResponseEntity purchaseTicket(@RequestParam int row, @RequestParam int col) {
+    public ResponseEntity purchaseTicket(@RequestBody Map<String, Integer> rowAndColumn) {
+        int row = rowAndColumn.get("row"), col = rowAndColumn.get("column");
         if (row <= 0 || row > cinema.getTotalRows() || col <= 0 || col > cinema.getTotalCols()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The number of a row or a column is out of bounds!");
+            return new ResponseEntity<>(
+                    Map.of("error", "The number of a row or a column is out of bounds!"),
+                    HttpStatus.BAD_REQUEST);
         }
-        Seat seat = cinema.getSeat(row, col);
-        if (seat.isAvailable()) {
-            return new ResponseEntity(seat, HttpStatus.ACCEPTED);
+        if (cinema.seatIsAvailable(row, col)) {
+            cinema.bookSeat(row, col);
+            return new ResponseEntity<>(cinema.getSeat(row, col), HttpStatus.OK);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The ticket has been already purchased!");
+            return new ResponseEntity<>(
+                    Map.of("error", "The ticket has been already purchased!"),
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }

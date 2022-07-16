@@ -1,7 +1,6 @@
 package cinema;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -15,6 +14,8 @@ public class Cinema {
     private Integer totalCols = 9;
     @JsonIgnore
     private final List<Seat> allSeats;
+    @JsonIgnore
+    private boolean[][] isTaken;
     @JsonProperty("available_seats")
     private List<Seat> availableSeats;
 
@@ -25,10 +26,11 @@ public class Cinema {
                 allSeats.add(new Seat(row + 1, col + 1));
             }
         }
+        isTaken = new boolean[totalRows][totalCols];
     }
 
     public Seat getSeat(int row, int col) {
-        return allSeats.get(row * totalCols + col);
+        return allSeats.get((row - 1) * totalCols + (col - 1));
     }
 
     public int getTotalRows() {
@@ -39,7 +41,17 @@ public class Cinema {
         return totalCols;
     }
 
+    public void bookSeat(int row, int col) {
+        isTaken[row - 1][col - 1] = true;
+    }
+
+    public boolean seatIsAvailable(int row, int col) {
+        return !isTaken[row - 1][col - 1];
+    }
+
     public List<Seat> getAvailableSeats() {
-        return allSeats.stream().filter(Seat::isAvailable).collect(Collectors.toList());
+        return allSeats.stream()
+                .filter(i -> seatIsAvailable(i.getRow(), i.getColumn()))
+                .collect(Collectors.toList());
     }
 }
