@@ -385,9 +385,12 @@ files:
         };
     }
   learner_created: false
+- name: src/cinema/TicketTokens.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13377#comment
 status: Solved
 feedback:
   message: Congratulations!
-  time: Sun, 17 Jul 2022 08:52:32 UTC
+  time: Sun, 17 Jul 2022 09:11:37 UTC
 record: -1

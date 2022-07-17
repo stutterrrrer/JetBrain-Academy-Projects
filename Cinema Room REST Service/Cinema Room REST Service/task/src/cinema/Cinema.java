@@ -13,7 +13,7 @@ public class Cinema {
     private final List<Seat> allSeats; // no getter - won't be in JSON output
     @JsonProperty("available_seats")
     private List<Seat> availableSeats;
-    private final Map<String, Seat> ticketTokens; // no getter - won't be in JSON output
+    private final TicketTokens ticketTokens; // @JsonIgnore getter - won't be in JSON output
 
     public Cinema() {
         allSeats = new ArrayList<>();
@@ -22,7 +22,7 @@ public class Cinema {
                 allSeats.add(new Seat(row + 1, col + 1));
             }
         }
-        ticketTokens = new HashMap<>();
+        ticketTokens = new TicketTokens();
     }
 
     public int getTotalRows() {
@@ -46,17 +46,15 @@ public class Cinema {
     public String purchaseTicketReturnToken(int row, int col) { // expects valid seat only
         Seat seat = getSeat(row, col);
         seat.setAvailable(false);
-        String token = UUID.randomUUID().toString();
-        ticketTokens.put(token, seat);
-        return token;
+        return ticketTokens.generateAndReturnTokenForSeat(seat);
     }
 
     public boolean isValidToken(String token) {
-        return ticketTokens.containsKey(token);
+        return ticketTokens.hasToken(token);
     }
 
     public Seat refundTicketReturnSeat(String token) { // expects valid token only
-        Seat seat = ticketTokens.remove(token);
+        Seat seat = ticketTokens.freeSeat(token);
         seat.setAvailable(true);
         return seat;
     }
