@@ -1,6 +1,7 @@
 package cinema;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Seat {
     private int row;
@@ -8,7 +9,7 @@ public class Seat {
     private boolean isAvailable; // has getter (but @JsonIgnore)
     private int price;
 
-    public Seat(int row, int column) {
+    public Seat(@JsonProperty("row") int row, @JsonProperty("column") int column) {
         this.row = row;
         this.column = column;
         this.price = row <= 4 ? 10 : 8;
@@ -19,16 +20,8 @@ public class Seat {
         return row;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-
     public int getColumn() {
         return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
     }
 
     @JsonIgnore
