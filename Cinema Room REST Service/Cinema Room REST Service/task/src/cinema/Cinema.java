@@ -12,10 +12,7 @@ public class Cinema {
     private Integer totalRows = 9;
     @JsonProperty("total_columns")
     private Integer totalCols = 9;
-    @JsonIgnore
-    private final List<Seat> allSeats;
-    @JsonIgnore
-    private boolean[][] isTaken;
+    private final List<Seat> allSeats; // no getter - won't be in JSON output
     @JsonProperty("available_seats")
     private List<Seat> availableSeats;
 
@@ -26,7 +23,6 @@ public class Cinema {
                 allSeats.add(new Seat(row + 1, col + 1));
             }
         }
-        isTaken = new boolean[totalRows][totalCols];
     }
 
     public Seat getSeat(int row, int col) {
@@ -42,11 +38,12 @@ public class Cinema {
     }
 
     public void bookSeat(int row, int col) {
-        isTaken[row - 1][col - 1] = true;
+        allSeats.get((row - 1) * totalCols + (col - 1)).setAvailable(false);
     }
 
     public boolean seatIsAvailable(int row, int col) {
-        return !isTaken[row - 1][col - 1];
+        return allSeats.get((row - 1) * totalCols + (col - 1)).isAvailable();
+
     }
 
     public List<Seat> getAvailableSeats() {
