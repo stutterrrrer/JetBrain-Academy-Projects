@@ -53,4 +53,17 @@ public class CinemaController {
                 HttpStatus.OK
         );
     }
+
+    @PostMapping("/stats")
+    public ResponseEntity<Object> getStats(
+            @RequestParam(value = "password", required = false)
+            String password) {
+        if (password == null || !password.equals("super_secret")) {
+            return new ResponseEntity<>(
+                    Map.of("error", "The password is wrong!"),
+                    HttpStatus.valueOf(401)
+            );
+        }
+        return new ResponseEntity<>(cinema.getStatistics(), HttpStatus.OK);
+    }
 }

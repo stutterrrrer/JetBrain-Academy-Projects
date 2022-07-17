@@ -1,5 +1,6 @@
 package cinema;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.*;
@@ -13,7 +14,8 @@ public class Cinema {
     private final List<Seat> allSeats; // no getter - won't be in JSON output
     @JsonProperty("available_seats")
     private List<Seat> availableSeats;
-    private final TicketTokens ticketTokens; // @JsonIgnore getter - won't be in JSON output
+    private final TicketTokens ticketTokens; // no getter - won't be in JSON output
+    private final Statistics statistics; // @JsonIgnore getter - won't be in JSON output
 
     public Cinema() {
         allSeats = new ArrayList<>();
@@ -23,6 +25,7 @@ public class Cinema {
             }
         }
         ticketTokens = new TicketTokens();
+        statistics = new Statistics(allSeats.size());
     }
 
     public int getTotalRows() {
@@ -46,6 +49,7 @@ public class Cinema {
     public String purchaseTicketReturnToken(int row, int col) { // expects valid seat only
         Seat seat = getSeat(row, col);
         seat.setAvailable(false);
+        statistics.purchaseTicket(seat);
         return ticketTokens.generateAndReturnTokenForSeat(seat);
     }
 
@@ -56,6 +60,12 @@ public class Cinema {
     public Seat refundTicketReturnSeat(String token) { // expects valid token only
         Seat seat = ticketTokens.freeSeat(token);
         seat.setAvailable(true);
+        statistics.refundTicket(seat);
         return seat;
+    }
+
+    @JsonIgnore
+    public Statistics getStatistics() {
+        return statistics;
     }
 }
