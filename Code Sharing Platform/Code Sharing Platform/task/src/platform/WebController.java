@@ -1,11 +1,11 @@
 package platform;
 
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 
@@ -16,16 +16,14 @@ public class WebController {
                     "    SpringApplication.run(CodeSharingPlatform.class, args);\n" +
                     "}";
 
-    @GetMapping("/code")
-    public String getCodeHTML(HttpServletResponse response) {
-        response.addHeader("Content-Type", "text/html");
+    @GetMapping(value = "/code", produces = MediaType.TEXT_HTML_VALUE)
+    public String getCodeHTML() {
         return "code.html";
     }
 
-    @GetMapping("/api/code")
+    @GetMapping(value = "/api/code", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, String> getCodeJSON(HttpServletResponse response) {
-        response.addHeader("Content-Type", "application/json");
+    public Map<String, String> getCodeJSON() {
         return Map.of("code", CODE);
     }
 }
