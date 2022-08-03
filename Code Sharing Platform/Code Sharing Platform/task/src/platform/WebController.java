@@ -1,60 +1,66 @@
 package platform;
 
 
-import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Controller
 public class WebController {
-    private static final String INIT_CODE_STR =
-            """
-                    public static void main(String[] args) {
-                        SpringApplication.run(CodeSharingPlatform.class, args);
-                    }""";
-    private Code code = new Code(INIT_CODE_STR);
 
-    @GetMapping(value = "/code", produces = MediaType.TEXT_HTML_VALUE)
-    @ResponseBody
-    public String getCodeHTML() {
-        return
-                """
-                        <html>
-                        <head>
-                            <title>Code</title>
-                        </head>
-                        <body>
-                        <pre id="code_snippet">
-                        """
-                        + code.getCode()
-                        + "</pre>"
-                        + "<span id=\"load_date\">"
-                        + code.getDateTime()
-                        + """
-                        </span>
-                        </body>
-                        </html>"""
-                ;
+    List<CodeSnippet> codeList = new ArrayList<>();
+
+    @GetMapping("/pizza")
+    public String pizzaTest(Model model) {
+        List<Pizza> pizzaList = List.of(
+                new Pizza("durian", 5),
+                new Pizza("cheese", 10)
+        );
+        model.addAttribute("pizzas", pizzaList);
+        return "menu";
     }
 
-    @GetMapping(value = "/api/code", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/code/{id}", produces = MediaType.TEXT_HTML_VALUE)
+    public String getCodeHTML(@PathVariable int id, Model model) {
+        CodeSnippet codeSnippet = getCodeJSON(id);
+        model.addAttribute("codeSnippet", codeSnippet);
+        return "singleSnippet";
+    }
+
+    @GetMapping(value = "/code/latest", produces = MediaType.TEXT_HTML_VALUE)
+    public String getLatestHTML(Model model) {
+        List<CodeSnippet> latest = getTenLatest();
+        model.addAttribute("snippets", latest);
+        return "latestSnippets";
+    }
+
+    @GetMapping(value = "/api/code/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Code getCodeJSON() {
-        return code;
+    public CodeSnippet getCodeJSON(@PathVariable int id) {
+        return codeList.get(id - 1);
+    }
+
+    @GetMapping(value = "/api/code/latest", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<CodeSnippet> getTenLatest() {
+        int n = codeList.size();
+        List<CodeSnippet> latest = new ArrayList<>();
+        for (int i = n - 1; i >= Math.max(0, n - 10); i--) latest.add(codeList.get(i));
+        return latest;
     }
 
     @PostMapping(value = "/api/code/new")
     @ResponseBody
-    public ResponseEntity<Object> updateCode(@RequestBody Code updatedCode) {
-        this.code = updatedCode;
-        return new ResponseEntity<>(new EmptyJson(), HttpStatus.OK);
+    public ResponseEntity<Object> addCode(@RequestBody CodeSnippet code) {
+        codeList.add(code);
+        return new ResponseEntity<>(Map.of("id", Integer.toString(codeList.size())), HttpStatus.OK);
     }
 
     @GetMapping(value = "/code/new", produces = MediaType.TEXT_HTML_VALUE)
@@ -72,14 +78,11 @@ public class WebController {
                                   let object = {
                                       "code": document.getElementById("code_snippet").value
                                   };
-                                 \s
                                   let json = JSON.stringify(object);
-                                 \s
                                   let xhr = new XMLHttpRequest();
                                   xhr.open("POST", '/api/code/new', false)
                                   xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
                                   xhr.send(json);
-                                 \s
                                   if (xhr.status != 200) {
                                     alert("something went wrong");
                                   }
@@ -96,4 +99,5 @@ public class WebController {
                         </body>
                         </html>""";
     }
+
 }

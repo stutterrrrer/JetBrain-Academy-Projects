@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
-public class Code {
+public class CodeSnippet {
     private String code;
     @JsonProperty("date")
     private LocalDateTime dateTime;
 
-    public Code(@JsonProperty("code") String code) {
+    public CodeSnippet(@JsonProperty("code") String code) {
         this.code = code;
         this.dateTime = LocalDateTime.now();
     }
