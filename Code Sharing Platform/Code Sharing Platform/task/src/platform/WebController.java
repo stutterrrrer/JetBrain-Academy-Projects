@@ -17,16 +17,6 @@ public class WebController {
 
     List<CodeSnippet> codeList = new ArrayList<>();
 
-    @GetMapping("/pizza")
-    public String pizzaTest(Model model) {
-        List<Pizza> pizzaList = List.of(
-                new Pizza("durian", 5),
-                new Pizza("cheese", 10)
-        );
-        model.addAttribute("pizzas", pizzaList);
-        return "menu";
-    }
-
     @GetMapping(value = "/code/{id}", produces = MediaType.TEXT_HTML_VALUE)
     public String getCodeHTML(@PathVariable int id, Model model) {
         CodeSnippet codeSnippet = getCodeJSON(id);
@@ -39,6 +29,11 @@ public class WebController {
         List<CodeSnippet> latest = getTenLatest();
         model.addAttribute("snippets", latest);
         return "latestSnippets";
+    }
+
+    @GetMapping(value = "/code/new", produces = MediaType.TEXT_HTML_VALUE)
+    public String httpForm() {
+        return "form";
     }
 
     @GetMapping(value = "/api/code/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,43 +56,6 @@ public class WebController {
     public ResponseEntity<Object> addCode(@RequestBody CodeSnippet code) {
         codeList.add(code);
         return new ResponseEntity<>(Map.of("id", Integer.toString(codeList.size())), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/code/new", produces = MediaType.TEXT_HTML_VALUE)
-    @ResponseBody
-    public String httpForm() {
-        return
-                """
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                        	<meta charset="UTF-8">
-                        	<title>Create</title>
-                        	<script type=javascript>
-                              function send() {
-                                  let object = {
-                                      "code": document.getElementById("code_snippet").value
-                                  };
-                                  let json = JSON.stringify(object);
-                                  let xhr = new XMLHttpRequest();
-                                  xhr.open("POST", '/api/code/new', false)
-                                  xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-                                  xhr.send(json);
-                                  if (xhr.status != 200) {
-                                    alert("something went wrong");
-                                  }
-                              }}
-                        	</script>
-                        </head>
-                        <body>
-                        <form>
-                        		<textarea id="code_snippet">
-                        		</textarea>
-                        	<button id="send_snippet" type="submit" onclick="send()"> Submit
-                        	</button>
-                        </form>
-                        </body>
-                        </html>""";
     }
 
 }

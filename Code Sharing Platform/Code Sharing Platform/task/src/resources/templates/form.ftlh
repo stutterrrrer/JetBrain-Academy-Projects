@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Create</title>
-	<script type=javascript src="js">
+	<script type=javascript src="/js/sendCode.js">
 		send();
 	</script>
 </head>
